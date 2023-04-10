@@ -8,26 +8,14 @@
 			<div class="login-bg"><img src="@/assets/login.png" /></div>
 		</div>
 		<div class="login-form">
-			<account v-if="loginType === 'account'"></account>
-			<mobile v-if="loginType === 'mobile'"></mobile>
-			<div class="login-more">
-				<el-button type="info" link @click="loginSwitch('account')">{{ $t('app.accountSignIn') }}</el-button>
-				<el-button type="info" link @click="loginSwitch('mobile')">{{ $t('app.mobileSignIn') }}</el-button>
-			</div>
+			<account></account>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import Account from './account.vue'
-import Mobile from './mobile.vue'
 
-// 登录类型
-const loginType = ref('account')
-const loginSwitch = (type: string) => {
-	loginType.value = type
-}
 </script>
 
 <style lang="scss" scoped>

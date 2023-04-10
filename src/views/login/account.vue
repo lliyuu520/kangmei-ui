@@ -7,10 +7,6 @@
 		<el-form-item prop="password">
 			<el-input v-model="loginForm.password" :prefix-icon="Lock" show-password :placeholder="$t('app.password')"></el-input>
 		</el-form-item>
-		<el-form-item prop="captcha" class="login-captcha">
-			<el-input v-model="loginForm.captcha" :placeholder="$t('app.captcha')" :prefix-icon="Key"></el-input>
-			<img :src="captchaBase64" @click="onCaptcha" />
-		</el-form-item>
 		<el-form-item class="login-button">
 			<el-button type="primary" @click="onLogin()">{{ $t('app.signIn') }}</el-button>
 		</el-form-item>
