@@ -20,11 +20,20 @@
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
 		</el-form>
-		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" >
+		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%">
 			<el-table-column type="expand">
 				<template #default="props">
-					<el-table :data="props.row.childrenCode" border>
-						<el-table-column prop="curCode" label="一级码" header-align="center" align="center"></el-table-column>
+					<el-table :data="props.row.childrenCodeVO" border>
+						<el-table-column type="expand">
+							<template #default="props">
+								<el-table :data="props.row.subChildrenCode" border>
+									<el-table-column prop="curCode" label="一级码" header-align="center" align="center"></el-table-column>
+									<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
+									<fast-table-column dict-type="mix_flag" label="混批标志" prop="flag"></fast-table-column>
+								</el-table>
+							</template>
+						</el-table-column>
+						<el-table-column prop="curCode" label="二级码" header-align="center" align="center"></el-table-column>
 						<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
 						<fast-table-column dict-type="mix_flag" label="混批标志" prop="flag"></fast-table-column>
 					</el-table>
@@ -35,16 +44,21 @@
 			<el-table-column prop="productName" label="药品名称" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="subType" label="剂型" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="subTypeNo" label="子类编码" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="parentCode.curCode" label="二级码" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="parentCode.batchNo" label="批次" header-align="center" align="center"></el-table-column>
-			<fast-table-column dict-type="mix_flag" label="混批标志" prop="parentCode.flag"></fast-table-column>
-			<el-table-column prop="cascade" label="包装比例" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="codeCascade" label="包装比例" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="boxCurCodeNum" label="箱码数量" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="canCurCodeNum" label="盒码数量" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="madeDate" label="生产日期" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="validateData" label="失效日期" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="workshop" label="工厂" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="lineName" label="产线" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="lineManager" label="产线负责人" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="generateNum" label="下载次数" header-align="center" align="center"></el-table-column>
+			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+				<template #default="scope">
+					<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">生成Xml </el-button>
+				</template>
+			</el-table-column>
 		</el-table>
 		<el-pagination
 			:current-page="state.page"
@@ -66,6 +80,8 @@ import { IHooksOptions } from '@/hooks/interface'
 import { baseUrl, generateXml, pageApiUrl } from '@/api/msfx/originalcode'
 import { ElMessage } from 'element-plus'
 import FastTableColumn from '@/components/fast-table-column/src/fast-table-column.vue'
+import FileSaver from 'file-saver'
+import moment from 'moment'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: pageApiUrl,
@@ -79,33 +95,12 @@ const state: IHooksOptions = reactive({
 	}
 })
 
-const addOrUpdateRef = ref()
-const codeInfoRef = ref()
-const addOrUpdateHandle = (id?: number) => {
-	addOrUpdateRef.value.init(id)
-}
-
-const codeInfoHandle = (id?: number) => {
-	codeInfoRef.value.init(id)
-}
-
-const genXmlHandle = (key?: number | string) => {
-	let ids: any[] = []
-	if (key) {
-		ids = [key]
-	} else {
-		ids = state.dataListSelections ? state.dataListSelections : []
-
-		if (ids.length === 0) {
-			ElMessage.warning('请选择记录')
-			return
-		}
-	}
-	generateXml(ids).then((res: { data: any }) => {
+const genXmlHandle = (workNo: string) => {
+	generateXml({ workNo: workNo }).then(() => {
 		ElMessage.success('操作成功')
-		window.open(res.data)
+		getDataList()
 	})
 }
 
-const { getDataList, sizeChangeHandle, currentChangeHandle, deleteBatchHandle } = useCrud(state)
+const { getDataList, selectionChangeHandle, sizeChangeHandle, currentChangeHandle, deleteBatchHandle } = useCrud(state)
 </script>

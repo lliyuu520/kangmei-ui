@@ -17,9 +17,7 @@
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
 			<el-form-item>
-				<el-upload v-auth="'msfx:product:uploadProduct'" class="upload-demo" :http-request="uploadProductHandle" :show-file-list="false">
-					<el-button type="primary">导入</el-button>
-				</el-upload>
+				<el-button type="primary" @click="syncProductHandle()">更新药品</el-button>
 			</el-form-item>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%">
@@ -31,6 +29,7 @@
 			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
+					<el-button v-auth="'msfx:product:update'" type="primary" link @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
 					<el-button type="primary" link @click="detailHandle(scope.row.id)">详情 </el-button>
 				</template>
 			</el-table-column>
@@ -48,6 +47,7 @@
 
 		<!-- 弹窗, 新增 / 修改 -->
 		<detail ref="detailRef" @refreshDataList="getDataList"></detail>
+		<add-or-update ref="addOrUpdateRef" @refreshDataList="getDataList"></add-or-update>
 	</el-card>
 </template>
 
@@ -56,8 +56,9 @@ import { useCrud } from '@/hooks'
 import { reactive, ref } from 'vue'
 import Detail from './detail.vue'
 import { IHooksOptions } from '@/hooks/interface'
-import { baseUrl, pageApiUrl, uploadProduct } from '@/api/msfx/product'
+import { baseUrl, pageApiUrl, syncProduct } from '@/api/msfx/product'
 import { ElMessage } from 'element-plus/es'
+import AddOrUpdate from '@/views/msfx/product/add-or-update.vue'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: pageApiUrl,
@@ -70,25 +71,20 @@ const state: IHooksOptions = reactive({
 	}
 })
 
-
+const addOrUpdateRef = ref()
+const addOrUpdateHandle = (id?: number) => {
+	addOrUpdateRef.value.init(id)
+}
 const detailRef = ref()
 const detailHandle = (id?: number) => {
 	detailRef.value.init(id)
 }
 
-const uploadProductHandle = (file: any) => {
-	return new Promise((resolve, reject) => {
-		uploadProduct(file)
-			.then(res => {
-				resolve(res)
-				ElMessage({ message: '上传成功', type: 'success' })
-				getDataList()
-			})
-			.catch(err => {
-				ElMessage({ message: '上传失败', type: 'error' })
-				reject(err)
-			})
+const syncProductHandle = () => {
+	syncProduct().then(() => {
+		ElMessage.success('更新成功')
 	})
+	getDataList()
 }
 
 const { getDataList, sizeChangeHandle, currentChangeHandle } = useCrud(state)

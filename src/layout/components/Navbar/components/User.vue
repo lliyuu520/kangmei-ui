@@ -1,7 +1,6 @@
 <template>
 	<el-dropdown class="avatar-container" trigger="hover">
 		<div class="avatar-wrapper">
-			<el-avatar shape="circle" :size="30" :src="store.userStore.user.avatar"></el-avatar>
 			<span>{{ store.userStore.user.username }}</span>
 			<el-icon class="el-icon--right"><ArrowDown /></el-icon>
 		</div>

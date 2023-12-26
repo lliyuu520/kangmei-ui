@@ -15,7 +15,6 @@
 
 <script setup lang="ts">
 import Account from './account.vue'
-
 </script>
 
 <style lang="scss" scoped>

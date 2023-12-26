@@ -41,7 +41,6 @@ const loginRules = ref({
 })
 
 onMounted(() => {
-	onCaptcha()
 })
 
 const onCaptcha = async () => {
@@ -63,7 +62,7 @@ const onLogin = () => {
 				router.push({ path: '/home' })
 			})
 			.catch(() => {
-				onCaptcha()
+				// onCaptcha()
 			})
 	})
 }

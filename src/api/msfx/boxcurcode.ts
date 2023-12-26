@@ -16,4 +16,8 @@ export const uploadBoxCurCode = (file: any) => {
 		}
 	})
 }
+export const syncBoxCurCode = () => {
+	return service.post(baseUrl + '/syncBoxCurCode')
+}
+
 

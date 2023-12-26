@@ -2,7 +2,7 @@
 	<el-card>
 		<el-form :inline="true" :model="state.queryForm" @keyup.enter="getDataList()">
 			<el-form-item>
-				<el-input v-model="state.queryForm.username" placeholder="用户名"></el-input>
+				<el-input v-model="state.queryForm.username" placeholder="工号"></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-input v-model="state.queryForm.address" placeholder="登录地点"></el-input>
@@ -20,7 +20,7 @@
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%" @selection-change="selectionChangeHandle">
 			<el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column>
 			<el-table-column prop="id" label="序号" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="username" label="用户名" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="username" label="工号" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="ip" label="登录IP" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="address" label="登录地点" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="userAgent" label="User Agent" show-overflow-tooltip header-align="center" align="center"></el-table-column>

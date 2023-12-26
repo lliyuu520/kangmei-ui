@@ -17,13 +17,18 @@
 				<el-input v-model="state.queryForm.code" placeholder="二级码"></el-input>
 			</el-form-item>
 			<el-form-item>
+				<el-select v-model="state.queryForm.useFlag" placeholder="使用状态">
+					<el-option label="是" :value="true"></el-option>
+					<el-option label="否" :value="false"></el-option>
+				</el-select>
+			</el-form-item>
+			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
 			</el-form-item>
 			<el-form-item>
-				<el-upload v-auth="'msfx:boxcurcode:uploadBoxCurCode'" class="upload-demo" :http-request="uploadBoxCurCodeHandle" :show-file-list="false">
-					<el-button type="primary">导入</el-button>
-				</el-upload>
+				<el-button type="primary" @click="syncBoxCurCodeHandle()">更新二级码</el-button>
 			</el-form-item>
+			<el-tag>{{ state.total }}</el-tag>
 		</el-form>
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%">
 			<el-table-column prop="productCode" label="药品编码" header-align="center" align="center"></el-table-column>
@@ -63,9 +68,8 @@
 import { useCrud } from '@/hooks'
 import { reactive, ref } from 'vue'
 import { IHooksOptions } from '@/hooks/interface'
-import { baseUrl, pageApiUrl, rollbackOne, uploadBoxCurCode } from '@/api/msfx/boxcurcode'
+import { baseUrl, pageApiUrl, rollbackOne, syncBoxCurCode, uploadBoxCurCode } from '@/api/msfx/boxcurcode'
 import { ElMessage } from 'element-plus/es'
-import FastTableColumn from '@/components/fast-table-column/src/fast-table-column.vue'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: pageApiUrl,
@@ -75,7 +79,8 @@ const state: IHooksOptions = reactive({
 		productCode: '',
 		subTypeNo: '',
 		subType: '',
-		code: ''
+		code: '',
+		useFlag: ''
 	}
 })
 
@@ -89,6 +94,13 @@ const rollbackOneHandle = (id: number) => {
 const uploadBoxCurCodeHandle = (file: any) => {
 	uploadBoxCurCode(file).then(res => {
 		ElMessage({ message: '上传成功', type: 'success' })
+		getDataList()
+	})
+}
+
+const syncBoxCurCodeHandle = () => {
+	syncBoxCurCode().then(res => {
+		ElMessage({ message: '更新成功', type: 'success' })
 		getDataList()
 	})
 }

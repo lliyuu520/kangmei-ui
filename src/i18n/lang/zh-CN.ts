@@ -15,12 +15,12 @@ export default {
 	updateTime: '更新时间',
 	required: '必填项不能为空',
 	app: {
-		title: 'Maku Admin',
+		title: '康美药业赋码系统',
 		description:
-			'基于Vue3、TypeScript、Element Plus、Vue Router、Pinia、Axios、i18n、Vite等开发的后台管理，使用门槛极低，采用MIT开源协议，完全免费开源且终生免费，可免费用于商业项目等场景！',
-		logoText: 'Maku Admin',
-		miniLogoText: 'MAKU',
-		username: '用户名',
+			'康美药业赋码系统',
+		logoText: '康美药业',
+		miniLogoText: '康美药业',
+		username: '工号',
 		password: '密码',
 		captcha: '验证码',
 		signIn: '登录',

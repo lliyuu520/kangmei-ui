@@ -15,9 +15,6 @@ export const routerStore = defineStore('routerStore', {
 
 			this.menuRoutes.push(...routes)
 
-			// 常量菜单
-			const constantRoutes = generateRoutes(constantMenu)
-			this.menuRoutes.push(...constantRoutes)
 
 			return this.menuRoutes
 		},
