@@ -5,16 +5,13 @@
 				<el-input v-model="state.queryForm.workNo" placeholder="报工单号"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-input v-model="state.queryForm.productCode" placeholder="药品编码"></el-input>
-			</el-form-item>
-			<el-form-item>
 				<el-input v-model="state.queryForm.productName" placeholder="药品名称"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-input v-model="state.queryForm.subType" placeholder="剂型"></el-input>
+				<el-input v-model="state.queryForm.packageSpec" placeholder="包装规格"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-input v-model="state.queryForm.subTypeNo" placeholder="子类编号"></el-input>
+				<el-date-picker v-model="state.queryForm.uploadDate" placeholder="上传日期" value-format="YYYY-MM-DD" format="YYYY-MM-DD"></el-date-picker>
 			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
@@ -27,27 +24,41 @@
 						<el-table-column type="expand">
 							<template #default="props">
 								<el-table :data="props.row.subChildrenCode" border>
+									<el-table-column type="index" label="序号" width="60"></el-table-column>
 									<el-table-column prop="curCode" label="一级码" header-align="center" align="center"></el-table-column>
 									<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
-									<fast-table-column dict-type="mix_flag" label="混批标志" prop="flag"></fast-table-column>
+									<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+										<template #default="scope">
+											<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">修改 </el-button>
+											<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">删除 </el-button>
+										</template>
+									</el-table-column>
 								</el-table>
 							</template>
 						</el-table-column>
-						<el-table-column prop="curCode" label="二级码" header-align="center" align="center"></el-table-column>
+            <el-table-column type="index" label="序号" width="60"></el-table-column>
+
+            <el-table-column prop="curCode" label="二级码" header-align="center" align="center"></el-table-column>
+						<el-table-column prop="curCode" label="盒码数量" header-align="center" align="center"></el-table-column>
 						<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
-						<fast-table-column dict-type="mix_flag" label="混批标志" prop="flag"></fast-table-column>
+						<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+							<template #default="scope">
+								<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">添加 </el-button>
+								<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">修改 </el-button>
+								<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">删除 </el-button>
+							</template>
+						</el-table-column>
 					</el-table>
 				</template>
 			</el-table-column>
-			<el-table-column prop="workNo" label="报工单号" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="productCode" label="药品编码" header-align="center" align="center"></el-table-column>
+      <el-table-column type="index" label="序号" width="60"></el-table-column>
+      <el-table-column prop="workNo" label="报工单号" header-align="center" align="center"></el-table-column>
+      <el-table-column prop="workNo" label="上传日期" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="productName" label="药品名称" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="subType" label="剂型" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="subTypeNo" label="子类编码" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="codeCascade" label="包装比例" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="boxCurCodeNum" label="箱码数量" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="canCurCodeNum" label="盒码数量" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="madeDate" label="生产日期" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="validateData" label="失效日期" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="workshop" label="工厂" header-align="center" align="center"></el-table-column>
@@ -56,7 +67,7 @@
 			<el-table-column prop="generateNum" label="下载次数" header-align="center" align="center"></el-table-column>
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
-					<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">生成Xml </el-button>
+					<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">下载 </el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -77,21 +88,16 @@
 import { useCrud } from '@/hooks'
 import { reactive, ref } from 'vue'
 import { IHooksOptions } from '@/hooks/interface'
-import { baseUrl, generateXml, pageApiUrl } from '@/api/msfx/originalcode'
+import { generateXml, pageApiUrl } from '@/api/msfx/originalcode'
 import { ElMessage } from 'element-plus'
-import FastTableColumn from '@/components/fast-table-column/src/fast-table-column.vue'
-import FileSaver from 'file-saver'
-import moment from 'moment'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: pageApiUrl,
-	deleteUrl: baseUrl,
 	queryForm: {
 		productName: '',
-		productCode: '',
+		packageSpec: '',
 		workNo: '',
-		subType: '',
-		subTypeNo: ''
+		uploadDate: ''
 	}
 })
 

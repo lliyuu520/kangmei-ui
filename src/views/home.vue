@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import OriginalCodeIndex from '@/views/msfx/originalcode/index.vue'
+import OriginalCodeIndex from '@/views/msfx/workplan/index.vue'
 </script>

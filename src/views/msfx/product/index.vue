@@ -8,10 +8,10 @@
 				<el-input v-model="state.queryForm.productName" placeholder="药品名称"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-input v-model="state.queryForm.subTypeNo" placeholder="剂型"></el-input>
+				<el-input v-model="state.queryForm.subTypeNo" placeholder="子类编码"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<el-input v-model="state.queryForm.subType" placeholder="子类名称"></el-input>
+				<el-input v-model="state.queryForm.packageSpec" placeholder="包装规格"></el-input>
 			</el-form-item>
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
@@ -23,9 +23,7 @@
 		<el-table v-loading="state.dataListLoading" :data="state.dataList" border style="width: 100%">
 			<el-table-column prop="productCode" label="药品编码" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="productName" label="药品名称" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="subTypeNo" label="剂型" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="subType" label="剂型" header-align="center" align="center"></el-table-column>
-			<el-table-column prop="spec" label="制剂规格" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="subTypeNo" label="子类编码" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
@@ -67,7 +65,7 @@ const state: IHooksOptions = reactive({
 		productName: '',
 		productCode: '',
 		subTypeNo: '',
-		subType: ''
+		packageSpec: ''
 	}
 })
 
