@@ -58,6 +58,10 @@ const submitHandle = () => {
 		if (!valid) {
 			return false
 		}
+		if (dataForm.bagCode.length != 20) {
+			ElMessage.error('码长度必须为20位')
+			return false
+		}
 		addBagCodeApi(dataForm).then(() => {
 			ElMessage.success({
 				message: '操作成功',

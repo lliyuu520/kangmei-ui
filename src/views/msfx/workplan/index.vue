@@ -4,12 +4,12 @@
 			<el-form-item>
 				<el-input v-model="state.queryForm.workNo" placeholder="报工单号"></el-input>
 			</el-form-item>
-      <el-form-item>
-        <el-input v-model="state.queryForm.code" placeholder="药品码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-input v-model="state.queryForm.batchNo" placeholder="批次"></el-input>
-      </el-form-item>
+			<el-form-item>
+				<el-input v-model="state.queryForm.code" placeholder="药品码"></el-input>
+			</el-form-item>
+			<el-form-item>
+				<el-input v-model="state.queryForm.batchNo" placeholder="批次"></el-input>
+			</el-form-item>
 			<el-form-item>
 				<el-input v-model="state.queryForm.productName" placeholder="药品名称"></el-input>
 			</el-form-item>
@@ -33,7 +33,7 @@
 									<el-table-column type="index" label="序号" width="60"></el-table-column>
 									<el-table-column prop="bagCode" label="盒码" header-align="center" align="center"></el-table-column>
 									<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
-									<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+									<el-table-column label="操作" fixed="right" header-align="center" align="center" width="250">
 										<template #default="scope">
 											<el-button type="primary" link @click="updateBagCodeHandle(scope.row)">修改 </el-button>
 											<el-button type="primary" link @click="removeBagCodeHandle(scope.row.bagCodeId)">删除 </el-button>
@@ -47,7 +47,7 @@
 						<el-table-column prop="boxCode" label="箱码" header-align="center" align="center"></el-table-column>
 						<el-table-column prop="bagCodeNum" label="盒码数量" header-align="center" align="center"> </el-table-column>
 						<el-table-column prop="batchNo" label="批次" header-align="center" align="center"></el-table-column>
-						<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+						<el-table-column label="操作" fixed="right" header-align="center" align="center" width="250">
 							<template #default="scope">
 								<el-button type="primary" link @click="addBagCodeHandle(scope.row)">添加盒码 </el-button>
 								<el-button type="primary" link @click="updateBoxCodeHandle(scope.row)">修改箱码 </el-button>
@@ -60,10 +60,10 @@
 			<el-table-column type="index" label="序号" width="60"></el-table-column>
 			<el-table-column prop="workNo" label="报工单号" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="uploadTime" label="上传日期" header-align="center" align="center">
-        <template #default="scope">
-          <span>{{ moment(scope.row.uploadTime).format('YYYY-MM-DD')}}</span>
-        </template>
-      </el-table-column>
+				<template #default="scope">
+					<span>{{ moment(scope.row.uploadTime).format('YYYY-MM-DD') }}</span>
+				</template>
+			</el-table-column>
 			<el-table-column prop="productName" label="药品名称" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="packageSpec" label="包装规格" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="cascade" label="包装比例" header-align="center" align="center"></el-table-column>
@@ -79,11 +79,11 @@
 					<el-tag v-for="item in scope.row.batchNoList" :key="item" type="success">{{ item }}</el-tag>
 				</template>
 			</el-table-column>
-			<el-table-column prop="generateNum" label="下载次数" header-align="center" align="center"></el-table-column>
-			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
+			<el-table-column prop="generateNum" label="次数" header-align="center" align="center" width="60"></el-table-column>
+			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="250">
 				<template #default="scope">
-					<el-button type="primary" link @click="productionInfoHandle(scope.row,true)">修改 </el-button>
-					<el-button type="primary" link @click="productionInfoHandle(scope.row,false)">详细 </el-button>
+					<el-button type="primary" link @click="productionInfoHandle(scope.row, true)">修改 </el-button>
+					<el-button type="primary" link @click="productionInfoHandle(scope.row, false)">详细 </el-button>
 					<el-button type="primary" link @click="genXmlHandle(scope.row.workNo)">下载 </el-button>
 				</template>
 			</el-table-column>
@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { useCrud } from '@/hooks'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from "vue";
 import { IHooksOptions } from '@/hooks/interface'
 import { generateXml, pageApiUrl, removeBagCodeApi, removeBoxCodeApi } from '@/api/msfx/workplan'
 import { ElMessage } from 'element-plus'
@@ -115,7 +115,7 @@ import ProductionInfo from './production-info.vue'
 import AddBagCode from './add-bag-code.vue'
 import UpdateBoxCode from './update-box-code.vue'
 import UpdateBagCode from './update-bag-code.vue'
-import moment from "moment/moment";
+import moment from 'moment/moment'
 
 const state: IHooksOptions = reactive({
 	dataListUrl: pageApiUrl,
@@ -123,12 +123,15 @@ const state: IHooksOptions = reactive({
 		productName: '',
 		packageSpec: '',
 		workNo: '',
-		uploadTime: null,
-    code: '',
-    batchNo: ''
+		uploadTime: '',
+		code: '',
+		batchNo: ''
 	}
 })
 
+onMounted(() => {
+	state.queryForm.uploadTime = moment().format('YYYY-MM-DD')
+})
 const genXmlHandle = (workNo: string) => {
 	generateXml(workNo).then(() => {
 		ElMessage.success('操作成功')
@@ -138,8 +141,8 @@ const genXmlHandle = (workNo: string) => {
 
 const productionInfoRef = ref()
 
-const productionInfoHandle = (data: any,editFlag:boolean) => {
-	productionInfoRef.value.init(data,editFlag)
+const productionInfoHandle = (data: any, editFlag: boolean) => {
+	productionInfoRef.value.init(data, editFlag)
 }
 
 const updateBoxCodeRef = ref()
