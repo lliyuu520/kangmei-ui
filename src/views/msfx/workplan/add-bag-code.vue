@@ -7,6 +7,12 @@
 			<el-form-item prop="batchNo" label="批号">
 				<el-input v-model="dataForm.batchNo" placeholder="批号"></el-input>
 			</el-form-item>
+			<el-form-item prop="madeDate" label="生产日期">
+				<el-input v-model="dataForm.madeDate" placeholder="生产日期"></el-input>
+			</el-form-item>
+			<el-form-item prop="validateData" label="失效日期">
+				<el-input v-model="dataForm.validateDate" validate-data="失效日期"></el-input>
+			</el-form-item>
 		</el-form>
 		<template #footer>
 			<el-button @click="visible = false">取消</el-button>
@@ -30,10 +36,14 @@ const dataForm = reactive<{
 	boxCodeId: number
 	bagCode: string
 	batchNo: string
+	madeDate: string
+	validateDate: string
 }>({
 	boxCodeId: 0,
 	bagCode: '',
-	batchNo: ''
+	batchNo: '',
+	validateDate: '',
+	madeDate: ''
 })
 
 const init = (data: any) => {
@@ -49,7 +59,9 @@ const init = (data: any) => {
 
 const dataRules = ref({
 	bagCode: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-	batchNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
+	batchNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  validateDate: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+  madeDate: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
 })
 
 // 表单提交
