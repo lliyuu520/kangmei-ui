@@ -16,6 +16,12 @@
 			<el-form-item label="包装比例">
 				<el-input v-model="state.queryForm.pkgRatio" placeholder="包装比例"></el-input>
 			</el-form-item>
+			<el-form-item label="公司">
+				<el-select v-model="state.queryForm.company" placeholder="公司"></el-select>
+					<el-option v-for="item in companyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+				</el-select>
+			</el-form-item>
+
 
 			<el-form-item>
 				<el-button @click="getDataList()">查询</el-button>
@@ -30,6 +36,11 @@
 			<el-table-column prop="pkgRatio" label="包装比例" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="oneCode" label="一级码标识" header-align="center" align="center"></el-table-column>
 			<el-table-column prop="twoCode" label="二级码标识" header-align="center" align="center"></el-table-column>
+			<el-table-column prop="company" label="公司" header-align="center" align="center">
+				<template #default="scope">
+					{{ filterCompany(scope.row.company) }}
+				</template>
+			</el-table-column>
 			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="150">
 				<template #default="scope">
 					<el-button v-auth="'msfx:product:update'" type="primary" link @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
@@ -68,9 +79,23 @@ const state: IHooksOptions = reactive({
 		twoCode: '',
 		productName: '',
 		packageSpec: '',
-		pkgRatio: ''
+		pkgRatio: '',
+		company: ''
 	}
 })
+interface Company {
+	code: string
+	name: string
+}
+
+const companyList = ref<Company[]>([
+	{ code: 'KM', name: '康美' },
+	{ code: 'PROXY', name: '白云山' }
+])
+
+const filterCompany = (key: string) => {
+	return companyList.value.find(item => item.code === key)?.name
+}
 
 const addOrUpdateRef = ref()
 const addOrUpdateHandle = (id?: number) => {

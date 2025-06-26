@@ -4,6 +4,11 @@
 			<el-form-item prop="months" label="有效期">
 				<el-input-number v-model="dataForm.months" placeholder="有效期"></el-input-number>
 			</el-form-item>
+			<el-form-item prop="company" label="公司">
+				<el-select v-model="dataForm.company" placeholder="请选择公司">
+					<el-option v-for="item in companyList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+				</el-select>
+			</el-form-item>
 		</el-form>
 		<template #footer>
 			<el-button @click="visible = false">取消</el-button>
@@ -26,9 +31,11 @@ const dataFormRef = ref()
 const dataForm = reactive<{
 	id: string
 	months: number
+	company: string
 }>({
 	id: '',
-	months: 0
+	months: 0,
+	company: 'KM'
 })
 
 const init = (id?: number) => {
@@ -52,9 +59,19 @@ const getData = (id: number) => {
 		dataForm.months = res.data.months
 	})
 }
+interface Company {
+	code: string
+	name: string
+}
+
+const companyList = ref<Company[]>([
+	{ code: 'KM', name: '康美' },
+	{ code: 'BYS', name: '白云山' }
+])
 
 const dataRules = ref({
-	months: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
+	months: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+	company: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
 })
 
 // 表单提交
